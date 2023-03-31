@@ -65,7 +65,9 @@ class _MaterialYouSearchBarState extends State<MaterialYouSearchBar> {
                   builder: (context, _) {
                     return Material(
                       child: Container(
-                        padding: EdgeInsets.only(top: 8 * animation.value),
+                        padding: EdgeInsets.only(
+                            top: (MediaQuery.of(context).padding.top) *
+                                animation.value),
                         alignment: Alignment.topCenter,
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.surfaceVariant,
@@ -232,79 +234,78 @@ class _ExpandedSearchBarWidgetState extends State<ExpandedSearchBarWidget> {
       child: Align(
         alignment: Alignment.topCenter,
         child: Material(
-            child: Column(
-          children: [
-            Ink(
-              height: 56,
-              width: double.infinity, // match parent
-              padding: const EdgeInsets.only(top: 16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant,
-              ),
-              child: DefaultTextStyle(
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                child: Row(
-                  children: [
-                    const SizedBox(width: 8),
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Ink(
+                    height: 56,
+                    width: double.infinity, // match parent
+                    child: DefaultTextStyle(
+                      style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                        child: Transform.translate(
-                      offset: const Offset(0, -6),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Hinted Search Text',
-                          hintStyle: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 14,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 8),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
                           ),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    )),
-                    const SizedBox(width: 16),
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        //delete text
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          const SizedBox(width: 8),
+                          Expanded(
+                              child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Hinted Search Text',
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                          )),
+                          const SizedBox(width: 16),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              //delete text
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
+                          ),
+                          PopupMenuButton(itemBuilder: (context) {
+                            return [
+                              const PopupMenuItem(
+                                child: Text('Settings'),
+                              ),
+                            ];
+                          }),
+                          const SizedBox(width: 8),
+                        ],
                       ),
                     ),
-                    PopupMenuButton(itemBuilder: (context) {
-                      return [
-                        const PopupMenuItem(
-                          child: Text('Settings'),
-                        ),
-                      ];
-                    }),
-                    const SizedBox(width: 8),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Container(),
+                  ),
+                ],
               ),
-            ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.surfaceVariant,
-              ),
-            ),
-          ],
-        )),
+            )),
       ),
     );
   }

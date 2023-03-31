@@ -1,5 +1,4 @@
 import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:widget_sandbox/screens/dropdown_menu_demo.dart';
 import 'package:widget_sandbox/screens/materialyou_searchbar_demo.dart';
@@ -7,7 +6,7 @@ import 'package:widget_sandbox/screens/materialyou_searchbar_demo.dart';
 void main() {
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: true,
       builder: (context) => const MyApp(), // Wrap your app
     ),
   );
