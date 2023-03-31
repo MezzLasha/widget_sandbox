@@ -48,6 +48,7 @@ class MaterialYouSearchBar extends StatefulWidget
 
 class _MaterialYouSearchBarState extends State<MaterialYouSearchBar> {
   final uniqueHeroTag = UniqueKey().toString();
+  final searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,83 +69,108 @@ class _MaterialYouSearchBarState extends State<MaterialYouSearchBar> {
                   builder: (context, _) {
                     return Material(
                       child: Container(
-                        padding: EdgeInsets.only(
-                            top: (MediaQuery.of(context).padding.top) *
-                                animation.value),
-                        alignment: Alignment.topCenter,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          color: widget.backgroundColor ??
+                              Theme.of(context).colorScheme.surfaceVariant,
                           borderRadius:
-                              BorderRadius.circular(32 - 32 * animation.value),
+                              BorderRadius.circular(32 * (1 - animation.value)),
                         ),
-                        child: Ink(
-                          height: widget.toolbarHeight ?? 56,
-                          width: double.infinity, // match parent
-                          decoration: BoxDecoration(
-                            color: widget.backgroundColor ??
-                                Theme.of(context).colorScheme.surfaceVariant,
-                            borderRadius: BorderRadius.circular(32),
-                          ),
-                          child: DefaultTextStyle(
-                            style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 16),
-                                Stack(
-                                  children: [
-                                    Opacity(
-                                      opacity: 1 - animation.value,
-                                      child: Transform.rotate(
-                                          angle: -0.5 * pi * animation.value,
-                                          child: widget.leading ??
-                                              const Icon(Icons.search)),
-                                    ),
-                                    Opacity(
-                                      opacity: animation.value,
-                                      child: Transform.rotate(
-                                          angle:
-                                              0.5 * pi * (1 - animation.value),
-                                          child: widget.leading ??
-                                              const Icon(Icons.arrow_back)),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 16),
-                                widget.title ??
-                                    const Expanded(
-                                        child: Text('Hinted Search Text')),
-                                const SizedBox(width: 16),
-                                Opacity(
-                                  opacity: animation.value,
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      //delete text
-                                    },
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                    ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(
+                                  top: (MediaQuery.of(context).padding.top) *
+                                      animation.value),
+                              alignment: Alignment.topCenter,
+                              child: Ink(
+                                height: widget.toolbarHeight ?? 56,
+                                width: double.infinity, // match parent
+                                child: DefaultTextStyle(
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 16),
+                                      Stack(
+                                        children: [
+                                          Opacity(
+                                            opacity: 1 - animation.value,
+                                            child: Transform.rotate(
+                                                angle:
+                                                    -0.5 * pi * animation.value,
+                                                child: widget.leading ??
+                                                    const Icon(Icons.search)),
+                                          ),
+                                          Opacity(
+                                            opacity: animation.value,
+                                            child: Transform.rotate(
+                                                angle: 0.5 *
+                                                    pi *
+                                                    (1 - animation.value),
+                                                child: widget.leading ??
+                                                    const Icon(
+                                                        Icons.arrow_back)),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 16),
+                                      widget.title ??
+                                          Expanded(
+                                              child: IgnorePointer(
+                                            child: TextFormField(
+                                              controller: searchController,
+                                              decoration: InputDecoration(
+                                                hintText: 'Hinted Search Text',
+                                                hintStyle: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 14,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
+                                                border: InputBorder.none,
+                                              ),
+                                            ),
+                                          )),
+                                      const SizedBox(width: 16),
+                                      Opacity(
+                                        opacity: animation.value,
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            //delete text
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ),
+                                      widget.trailing ??
+                                          PopupMenuButton(
+                                              itemBuilder: (context) {
+                                            return [
+                                              const PopupMenuItem(
+                                                child: Text('Settings'),
+                                              ),
+                                            ];
+                                          }),
+                                      const SizedBox(width: 8),
+                                    ],
                                   ),
                                 ),
-                                widget.trailing ??
-                                    PopupMenuButton(itemBuilder: (context) {
-                                      return [
-                                        const PopupMenuItem(
-                                          child: Text('Settings'),
-                                        ),
-                                      ];
-                                    }),
-                                const SizedBox(width: 8),
-                              ],
+                              ),
                             ),
-                          ),
+                            Flexible(
+                                child: Opacity(
+                                    opacity: animation.value,
+                                    child: const Divider()))
+                          ],
                         ),
                       ),
                     );
@@ -159,6 +185,7 @@ class _MaterialYouSearchBarState extends State<MaterialYouSearchBar> {
                       pageBuilder: (context, _, __) {
                         return ExpandedSearchBarWidget(
                           tag: uniqueHeroTag,
+                          searchController: searchController,
                         );
                       },
                       transitionsBuilder:
@@ -198,7 +225,22 @@ class _MaterialYouSearchBarState extends State<MaterialYouSearchBar> {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
             const SizedBox(width: 16),
-            widget.title ?? const Expanded(child: Text('Hinted Search Text')),
+            widget.title ??
+                Expanded(
+                    child: IgnorePointer(
+                  child: TextFormField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Hinted Search Text',
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                )),
             const SizedBox(width: 16),
             widget.trailing ??
                 PopupMenuButton(itemBuilder: (context) {
@@ -220,9 +262,11 @@ class ExpandedSearchBarWidget extends StatefulWidget {
   const ExpandedSearchBarWidget({
     super.key,
     required this.tag,
+    required this.searchController,
   });
 
   final String tag;
+  final TextEditingController searchController;
 
   @override
   State<ExpandedSearchBarWidget> createState() =>
@@ -269,6 +313,8 @@ class _ExpandedSearchBarWidgetState extends State<ExpandedSearchBarWidget> {
                           const SizedBox(width: 8),
                           Expanded(
                               child: TextFormField(
+                            autofocus: true,
+                            controller: widget.searchController,
                             decoration: InputDecoration(
                               hintText: 'Hinted Search Text',
                               hintStyle: TextStyle(
@@ -286,6 +332,7 @@ class _ExpandedSearchBarWidgetState extends State<ExpandedSearchBarWidget> {
                             padding: EdgeInsets.zero,
                             onPressed: () {
                               //delete text
+                              widget.searchController!.clear();
                             },
                             icon: Icon(
                               Icons.close,
@@ -306,6 +353,7 @@ class _ExpandedSearchBarWidgetState extends State<ExpandedSearchBarWidget> {
                       ),
                     ),
                   ),
+                  const Divider(),
                   Expanded(
                     child: Container(),
                   ),
