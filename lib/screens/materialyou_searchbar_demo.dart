@@ -56,6 +56,9 @@ class _MaterialYouSearchBarState extends State<MaterialYouSearchBar> {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Hero(
+          createRectTween: (begin, end) {
+            return MaterialRectCenterArcTween(begin: begin, end: end);
+          },
           flightShuttleBuilder: (flightContext, animation, direction,
                   fromContext, toContext) =>
               AnimatedBuilder(
@@ -230,6 +233,9 @@ class _ExpandedSearchBarWidgetState extends State<ExpandedSearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Hero(
+      createRectTween: (begin, end) {
+        return MaterialRectCenterArcTween(begin: begin, end: end);
+      },
       tag: widget.tag,
       child: Align(
         alignment: Alignment.topCenter,
